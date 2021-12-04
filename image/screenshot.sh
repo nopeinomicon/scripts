@@ -27,7 +27,7 @@ screenshot() {
             read selection
         fi
         selection=$(echo "$selection" | cut -c1-1)                  # Cut input to first character
-        selection=$(echo "$selection" | tr '[:upper:]' '[:lower:]') # Force lowercase
+        selection=$(echo "$selection" | awk '{print tolower($0)}') # Force lowercase
         if [ $selection = "y" ]; then
             if command -v imv >/dev/null; then
                 imv $filename &
@@ -49,7 +49,7 @@ screenshot() {
         read selection
     fi
     selection=$(echo "$selection" | cut -c1-1)                  # Cut input to first character
-    selection=$(echo "$selection" | tr '[:upper:]' '[:lower:]') # Force lowercase
+    selection=$(echo "$selection" | awk '{print tolower($0)}') # Force lowercase
     if [ $selection = "y" ]; then
         if [ $XDG_SESSION_TYPE = "wayland" ]; then
             wl-copy <"$filename"
