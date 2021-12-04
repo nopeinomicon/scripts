@@ -4,3 +4,4 @@ scriptdir=$(dirname "$(realpath "$0")");
 . $scriptdir/utils/shellutils.sh;
 . $scriptdir/utils/pathutils.sh;
 . $scriptdir/utils/getapps.sh;
+. $scriptdir/utils/function/embedfunction.sh;
