@@ -41,7 +41,7 @@ embedfunction () {
         done
     fi
     needed_functions="$needed_functions $(echo "$2" | sed 's/,/ /g')"
-    echo "#!/bin/sh"
+    echo "#!$SHELL"
     getfunction $(echo "$needed_functions")
     echo "$2"
 }
