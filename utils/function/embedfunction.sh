@@ -21,9 +21,9 @@ getfunction() {
 }
 embedfunction () {
     if [ "$(echo "$arg" | cut -c1-2)" = "-h" ]; then
-        echo "embedfunction [-h] [DEPENDENCY_LIST] [FUNCTION_NAME]"
+        echo "embedfunction [-h] [DEPENDENCY_LIST] [FUNCTION_NAMES]"
         echo "DEPENDENCY_LIST: File which contains the list of functions and their dependencies. An example file should have come with the script."
-        echo "FUNCTION_NAME: Name of the function to embed"
+        echo "FUNCTION_NAME: Names of functions to be embeded, comma-seperated"
         return 0;
     elif [ -z "$1" ] || [ -z "$2" ]; then
         echo "Invalid arguments!"
@@ -40,7 +40,7 @@ embedfunction () {
             fi
         done
     fi
-    needed_functions="$needed_functions $2"
+    needed_functions="$needed_functions $(echo "$2" | sed 's/,/ /g')"
     echo "#!/bin/sh"
     getfunction $(echo "$needed_functions")
     echo "$2"
