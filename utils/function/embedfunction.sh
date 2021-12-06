@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/sh
 getfunctionnames() {
     if command -v declare >/dev/null; then
         declare -f | awk -v RS='\n}\n' '/[^:cntrl::space:]*\(\)[:cntrl::space:]*/ {print $1}' | sed "/^_/D" | sed "s/[()]*/""/g" | sed "/[\[\]+(){}=%\;~$]/D" | sed "/function.*/D" | sed "/local.*/D" | sed "/^$/d" | sort -u
@@ -29,13 +29,19 @@ embedfunction () {
         echo "Invalid arguments!"
         return 1;
     fi
-    DEPLINE=$(grep "$2:" < "$1")
-    FUNCTIONS=""
-    if [ -n "$DEPLINE" ]; then
-        FUNCTIONS=$(echo "$DEPLINE" | awk '{print $2}' | sed 's/,/ /g')
+    needed_functions=""
+    maindepline=$(grep "$2:" < "$1")
+    if [ -n "$maindepline" ]; then
+        needed_functions=$(echo "$maindepline" | awk '{print $2}' | sed 's/,/ /g')
+        echo "$maindepline" | awk '{print $2}' | sed 's/,/\n/g' | while read -r reqfunc; do
+            depline=$(grep "$reqfunc:" < "$1")
+            if [ -n "$depline" ]; then
+                needed_functions="$needed_functions $(echo "$depline" | awk '{print $2}' | sed 's/,/ /g')"
+            fi
+        done
     fi
-    FUNCTIONS="$FUNCTIONS $2"
+    needed_functions="$needed_functions $2"
     echo "#!/bin/sh"
-    getfunction $(echo "$FUNCTIONS")
+    getfunction $(echo "$needed_functions")
     echo "$2"
 }
