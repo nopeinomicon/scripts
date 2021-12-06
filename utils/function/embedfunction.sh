@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 getfunctionnames() {
     if command -v declare >/dev/null; then
         declare -f | awk -v RS='\n}\n' '/[^:cntrl::space:]*\(\)[:cntrl::space:]*/ {print $1}' | sed "/^_/D" | sed "s/[()]*/""/g" | sed "/[\[\]+(){}=%\;~$]/D" | sed "/function.*/D" | sed "/local.*/D" | sed "/^$/d" | sort -u
