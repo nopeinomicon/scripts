@@ -12,10 +12,6 @@ screenshot() {
     # Preview captured screenshot in kitty terminal
     if [ $TERM = "xterm-kitty" ]; then
         kitty +kitten icat "$filename"
-    # WIP method to preview using ueberzug on Xorg
-    # elif [ $XDG_SESSION_TYPE = "x11" ] && command -v ueberzug > /dev/null
-    # then
-    #     echo "{\"action\": \"add\", \"identifier\": \"img\", \"x\": 0, \"y\": 0, \"path\": \"$filename\"}" | ueberzug layer -p json;
     else
         selection="n"
         if command -v bemenu >/dev/null; then
@@ -28,11 +24,13 @@ screenshot() {
         fi
         selection=$(echo "$selection" | cut -c1-1)                  # Cut input to first character
         selection=$(echo "$selection" | awk '{print tolower($0)}') # Force lowercase
-        if [ $selection = "y" ]; then
-            if command -v imv >/dev/null; then
-                imv $filename &
+        if [ "$selection" = "y" ]; then
+            if command -v xdg-open >/dev/null; then
+                xdg-open "$filename" &
+            elif command -v imv >/dev/null; then
+                imv "$filename" &
             elif command -v feh >/dev/null; then
-                feh $filename &
+                feh "$filename" &
             else
                 echo "Cannot find application to open preview with!"
             fi
@@ -50,12 +48,17 @@ screenshot() {
     fi
     selection=$(echo "$selection" | cut -c1-1)                  # Cut input to first character
     selection=$(echo "$selection" | awk '{print tolower($0)}') # Force lowercase
-    if [ $selection = "y" ]; then
-        if [ $XDG_SESSION_TYPE = "wayland" ]; then
+    if [ "$selection" = "y" ]; then
+        if [ "$XDG_SESSION_TYPE" = "wayland" ] && command -v wl-copy >/dev/null; then
             wl-copy <"$filename"
-        else # assume an Xorg environment as a safe option if Wayland not detected
+            echo "Image copied to clipboard."
+        elif command -v xclip >/dev/null; then # assume an Xorg environment as a safe option if Wayland not detected
             xclip -i <"$filename"
+            echo "Image copied to clipboard."
+        else
+            echo "Found no suitable tools with which to add to clipboard."
         fi
-        echo "Image copied to clipboard."
     fi
 }
+
+screenshot

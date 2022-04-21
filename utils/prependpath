@@ -1,0 +1,12 @@
+#!/bin/sh
+# Function to add a given directory to the beginning of the path variable 
+prependpath() {
+    case ":$PATH:" in
+    *:"$1":*) ;;
+    *)
+        PATH="$1:${PATH:+$PATH}"
+        ;;
+    esac
+}
+
+prependpath "$1"

@@ -1,7 +1,4 @@
 #!/bin/sh
-scriptdir=$(dirname "$(realpath "init.sh")");
-. $scriptdir/image/screenshot.sh;
-. $scriptdir/utils/shellutils.sh;
-. $scriptdir/utils/pathutils.sh;
-. $scriptdir/utils/getapps.sh;
-. $scriptdir/utils/function/embedfunction.sh;
+scriptdir=$(dirname "$(realpath "$0")");
+export PATH="$PATH:$scriptdir/image"
+export PATH="$PATH:$scriptdir/utils"

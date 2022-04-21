@@ -1,0 +1,30 @@
+#!/bin/sh
+getpathdirs() {
+    in="$PATH"
+    while [ "$in" != "$currentelement" ]; do
+        # Extract the first path (all text up to the first colon)
+        currentelement=${in%%:*}
+        # Delete the pulled path from the list along with the seperator
+        in="${in#$currentelement:}"
+        if [ ! ${currentelement%%~*} ]; then # Workaround for ~ not passing as the home directory when this function is used elsewhere
+            echo "$HOME${currentelement#~*}"
+        else
+            # Print the current element
+            echo "$currentelement"
+        fi
+    done
+}
+trim_filepath() {
+    echo "${1##*/}"
+}
+getapps() {
+    getpathdirs | while IFS= read -r directory; do
+        find "$directory" -maxdepth 1 -perm -111 -type f | while IFS= read -r execfile; do
+            echo "$(trim_filepath "$execfile")" >> .apptmp
+        done
+    done
+    cat .apptmp | sort -u
+    rm .apptmp
+}
+
+getapps

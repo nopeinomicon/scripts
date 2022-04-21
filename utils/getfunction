@@ -1,0 +1,14 @@
+#!/bin/sh
+# Script to get the body of any function which is exposed/sourced in the current shell session
+getfunction() {
+    if command -v declare >/dev/null; then
+        declare -f "$@";
+    elif command -v typeset >/dev/null; then
+        typeset -f "$@"
+    else
+        echo "This command is incompatible with this shell! Use more featureful shell like ksh, bash, zsh, etc."
+        return 1
+    fi
+}
+
+getfunction "$1"

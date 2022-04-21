@@ -1,4 +1,5 @@
 #!/bin/sh
+# Script to retrieve running shell name
 getshell() {
     pgrep -l sh -P $PPID | sed 1q | awk '{print $2}'
 }

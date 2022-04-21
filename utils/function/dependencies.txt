@@ -1,2 +1,0 @@
-getapps: getpathdirs,trim_filepath
-runmenu: getmenu,getapps,getfunctionnames
