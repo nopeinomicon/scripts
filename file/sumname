@@ -1,0 +1,13 @@
+#!/bin/sh
+# Script to rename all files in a directory to their checksum
+sumname() {
+  for i in *; do
+    sum=$(b2sum -l 48 "$i" | awk '{ print $1 }').$(echo "$i" | awk -F . '{print $NF}')
+    if [ "$sum" != "$i" ]; then
+      mv "$i" "$sum"
+      echo "$i -> $sum"
+    fi
+  done
+}
+
+sumname
