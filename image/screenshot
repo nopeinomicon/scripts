@@ -22,7 +22,7 @@ screenshot() {
         elif command -v dmenu >/dev/null; then
             selection=$(printf "No\nYes" | dmenu -p "Show image preview? [y/N]")
         else
-            echo "Show image preview? [y/N]"
+            echo "Show image preview? [y/N] "
             read selection
         fi
         selection=$(echo "$selection" | cut -c1-1)                  # Cut input to first character
@@ -46,7 +46,7 @@ screenshot() {
     elif command -v dmenu >/dev/null; then
         selection=$(printf "No\nYes" | dmenu -p "Copy to clipboard? [y/N]")
     else
-        printf "Copy to clipboard? [y/N]"
+        printf "Copy to clipboard? [y/N] "
         read selection
     fi
     selection=$(echo "$selection" | cut -c1-1)                  # Cut input to first character
