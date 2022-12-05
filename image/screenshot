@@ -2,12 +2,15 @@
 screenshot() {
     filename="$HOME/Pictures/Screenshots/screenshot-$(date +\%Y\%m\%d\%H\%M).png"
     if [ $XDG_SESSION_TYPE = "wayland" ]; then
-        out=$(grimshot save area "$filename")
-        if [ -z "${out##*"selection cancelled"*}" ]; then
+        echo "This script is incompatible with a Wayland environment, aborting..."
+        return 1
+    else # assume an Xorg environment as a safe option if Wayland not detected
+        if command -v scrot >/dev/null; then
+            scrot -s "$filename"
+        else
+            echo "This script requires the scrot screenshot utility to function, aborting..."
             return 1
         fi
-    else # assume an Xorg environment as a safe option if Wayland not detected
-        scrot -s "$filename"
     fi
     # Preview captured screenshot in kitty terminal
     if [ $TERM = "xterm-kitty" ]; then
