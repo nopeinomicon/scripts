@@ -1,7 +1,7 @@
 #!/bin/sh
-# Script to write an m3u playlist file for an album in specified or current folder
+# Script to write an m3u8 playlist file for an album in specified or current folder
 # If available will use tag information collected by ffprobe to name the m3u file, otherwise will name it after parent folder
-create_m3u() {
+create_m3u8() {
     allowed_extensions=".mp3\|.aac\|.flac\|.m4a\|.wav\|.dsf\|.dff\|.wv\|.ape"
     if [ -d "$1" ] ; then
         PLAYLIST=$(ls -1v "$1" |grep $allowed_extensions)
@@ -9,11 +9,11 @@ create_m3u() {
         if command -v ffprobe >/dev/null; then
             ARTIST=$(ffprobe -loglevel error -show_entries format_tags=artist -of default=noprint_wrappers=1:nokey=1 "$SAMPLEITEM")
             ALBUM=$(ffprobe -loglevel error -show_entries format_tags=album -of default=noprint_wrappers=1:nokey=1 "$SAMPLEITEM")
-            echo "$PLAYLIST" > "$1/$ARTIST - $ALBUM.m3u"
+            echo "$PLAYLIST" > "$1/$ARTIST - $ALBUM.m3u8"
         else
             OLDPWD="$(pwd)"
             cd "$1" || return 1
-            echo "$PLAYLIST" > "$1/$(basename "$(pwd)").m3u"
+            echo "$PLAYLIST" > "$1/$(basename "$(pwd)").m3u8"
             cd "$OLDPWD" || return 1
         fi
     else
@@ -22,7 +22,7 @@ create_m3u() {
     fi
 }
 if [ "$1" = "" ] ; then
-    create_m3u "./"
+    create_m3u8 "./"
 else
-    create_m3u "$1"
+    create_m3u8 "$1"
 fi
